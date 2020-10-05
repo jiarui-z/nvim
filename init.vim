@@ -13,43 +13,63 @@ set clipboard=unnamedplus
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" tab
-set expandtab
-set tabstop=2
-set shiftwidth=2
-
-set list
-set listchars=tab:\|\ ,trail:▫
-
-" backspace
-set backspace=indent,eol,start
-
-" prevent incorrect backgroung rendering
-let &t_ut=''
-
 " setup
+let mapleader=" "
+let &t_ut=''
 syntax on
+set autochdir
 set hidden
 set number
 set relativenumber
 set ruler
 set cursorline
 set linebreak
+set expandtab
+set tabstop=2
+set shiftwidth=2
+set list
+set listchars=tab:\|\ ,trail:▫
+
+" jump to last position
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+" Terminal
+let g:neoterm_autoscroll = 1
+autocmd TermOpen term://* startinsert | setlocal nonumber norelativenumber signcolumn=no
+tnoremap <C-n> <C-\><C-n>
+tnoremap <C-o> <C-\><C-n>:q<CR>
+let g:terminal_color_0  = '#737c8d'
+let g:terminal_color_1  = '#ff637f'
+let g:terminal_color_2  = '#3fc56a'
+let g:terminal_color_3  = '#f9c858'
+let g:terminal_color_4  = '#10b0fe'
+let g:terminal_color_5  = '#ff77f8'
+let g:terminal_color_6  = '#5fb9bc'
+let g:terminal_color_7  = '#fefefe'
+let g:terminal_color_8  = '#5c626f'
+let g:terminal_color_9  = '#fc2e51'
+let g:terminal_color_10 = '#25a45c'
+let g:terminal_color_11 = '#ff9369'
+let g:terminal_color_12 = '#3475fe'
+let g:terminal_color_13 = '#9f7dfe'
+let g:terminal_color_14 = '#4483aa'
+let g:terminal_color_15 = '#d5ddea'
+noremap <LEADER>s :set splitbelow<CR>:split<CR>:res +10<CR>:term<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " === General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let mapleader=" "
 noremap ; :
 
-map s <nop>
-map S :w<CR>
-map Q :q<CR>
-map R :source $MYVIMRC<CR>
+noremap s <nop>
+noremap S :w<CR>
+noremap Q :q<CR>
+noremap <LEADER>rc :e ~/.config/nvim/init.vim<CR>
 
 " prevent auto wrapping
 set wrap
 set tw=0
+au FileType * set fo-=c fo-=r fo-=o
 
 set showcmd
 set wildmenu
@@ -63,8 +83,8 @@ set smartcase
 set shortmess+=c
 set updatetime=1000
 noremap <LEADER><CR> :nohlsearch<CR>
-noremap = nzz
 noremap - Nzz
+noremap = nzz
 
 " insert
 noremap h i
@@ -92,6 +112,9 @@ noremap K 5j
 
 set scrolloff=5
 
+" command line
+" cnoremap <C-i> <Up>
+" cnoremap <C-k> <Down>
 " split windows
 map si :set nosplitbelow<CR>:split<CR>:set splitbelow<CR>
 map sk :set splitbelow<CR>:split<CR>
@@ -123,17 +146,13 @@ noremap tl :tabnext<CR>
 noremap tmj :-tabmove<CR>
 noremap tml :+tabmove<CR>
 
-" change cursor shape
-let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-let &t_SR = "\<Esc>]50;CursorShape=2\x7"
-let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-
 call plug#begin('~/.vim/plugged')
 " File navigation
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 " Plug 'preservim/nerdtree'
-
+" highlight
+Plug 'RRethy/vim-illuminate'
 " auto
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
@@ -142,32 +161,44 @@ Plug 'airblade/vim-gitgutter'
 
 " ui
 Plug 'morhetz/gruvbox'
-Plug 'vim-airline/vim-airline'
+Plug 'ajmwagar/vim-deus'
+
+" Plug 'vim-airline/vim-airline'
+Plug 'liuchengxu/eleline.vim'
 
 " util
 Plug 'tpope/vim-surround'
 Plug 'jiangmiao/auto-pairs'
-Plug 'preservim/nerdcommenter'
+" Plug 'preservim/nerdcommenter'
+Plug 'tpope/vim-commentary'
+
 
 call plug#end()
 
 " color
 set termguicolors
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-color gruvbox
+color deus
 
-" git
+" eleline
+
+" === illuminate
+let g:Illuminate_delay = 600
+hi illuminatedWord cterm=undercurl gui=undercurl
+
+" === git
 let g:gitgutter_map_keys = 0
 nnoremap gp :GitGutterPreviewHunk<CR>
 nnoremap g- :GitGutterPrevHunk<CR>
 nnoremap g= :GitGutterNextHunk<CR>
 
-" fzf
-noremap <C-p> :Files<CR>
-noremap <C-h> :History<CR>
+" === fzf
+noremap <silent> <C-p> :Files<CR>
+noremap <silent> <C-h> :History<CR>
 
-" coc
-let g:coc_global_extensions = ['coc-vimlsp', 'coc-clangd']
+" === coc
+let g:coc_global_extensions = ['coc-vimlsp', 'coc-json', 'coc-explorer', 'coc-snippets', 'coc-clangd']
+
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
@@ -179,3 +210,27 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
+inoremap inoremap<silent><expr> <c-o> coc#refresh()
+inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" diagnostics navigation
+nmap <silent> <LEADER>- <Plug>(coc-diagnostic-prev)
+nmap <silent> <LEADER>= <Plug>(coc-diagnostic-next)
+
+" code uavigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> go <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" preview
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocActionAsync('doHover')
+  endif
+endfunction
+nnoremap <silent> <LEADER>v :call <SID>show_documentation()<CR>
+
+nmap ff :CocCommand explorer<CR>
