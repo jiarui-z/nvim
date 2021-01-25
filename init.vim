@@ -1,13 +1,7 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => System
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set nocompatible
-filetype on
-filetype indent on
-filetype plugin on
-filetype plugin indent on
 set mouse=a
-set encoding=utf-8
 set clipboard=unnamedplus
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -16,28 +10,28 @@ set clipboard=unnamedplus
 " setup
 let mapleader=" "
 let &t_ut=''
-syntax on
 set autochdir
 set hidden
 set number
 set relativenumber
-set ruler
 set cursorline
 set linebreak
-set expandtab
+set noexpandtab
 set tabstop=2
 set shiftwidth=2
-set list
-set listchars=tab:\|\ ,trail:▫
+set softtabstop=2
+set list lcs=tab:\|\ ,trail:▫
+set scrolloff=5
 
 " jump to last position
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+au FileType markdown let b:coc_suggest_disable = 1
 
 " Terminal
 let g:neoterm_autoscroll = 1
-autocmd TermOpen term://* startinsert | setlocal nonumber norelativenumber signcolumn=no
+au TermOpen term://* startinsert | setlocal nonumber norelativenumber signcolumn=no
 tnoremap <C-n> <C-\><C-n>
-tnoremap <C-o> <C-\><C-n>:q<CR>
+tnoremap <C-o> <C-\><C-n>:bd!<CR>
 let g:terminal_color_0  = '#737c8d'
 let g:terminal_color_1  = '#ff637f'
 let g:terminal_color_2  = '#3fc56a'
@@ -69,10 +63,9 @@ noremap <LEADER>rc :e ~/.config/nvim/init.vim<CR>
 " prevent auto wrapping
 set wrap
 set tw=0
-au FileType * set fo-=c fo-=r fo-=o
-
-set showcmd
-set wildmenu
+set foldmethod=indent
+set foldlevel=99
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " search
 set hlsearch
@@ -83,13 +76,10 @@ set smartcase
 set shortmess+=c
 set updatetime=1000
 noremap <LEADER><CR> :nohlsearch<CR>
-noremap - Nzz
-noremap = nzz
 
 " insert
 noremap h i
 noremap H I
-inoremap <C-l> <ESC>A
 
 " always show signcolumn
 set signcolumn=yes
@@ -103,14 +93,12 @@ noremap k j
 noremap j h
 noremap gi gk
 noremap gk gj
-
-noremap W b
+noremap gj ^
+noremap gl $
 
 " move faster
 noremap I 5k
 noremap K 5j
-
-set scrolloff=5
 
 " command line
 " cnoremap <C-i> <Up>
@@ -140,39 +128,56 @@ noremap sh <C-w>t<C-w>K
 noremap sv <C-w>t<C-w>H
 
 " Tab management
-noremap tu :tabe<CR>
-noremap tj :-tabnext<CR>
-noremap tl :tabnext<CR>
-noremap tmj :-tabmove<CR>
-noremap tml :+tabmove<CR>
+noremap ff :tabe<CR>
+noremap fj :-tabnext<CR>
+noremap fl :tabnext<CR>
+noremap fmj :-tabmove<CR>
+noremap fml :+tabmove<CR>
 
-call plug#begin('~/.vim/plugged')
+call plug#begin('~/.config/nvim/plugged')
 " File navigation
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-" Plug 'preservim/nerdtree'
+Plug 'airblade/vim-rooter'
+Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+
 " highlight
 Plug 'RRethy/vim-illuminate'
+
 " auto
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " git
 Plug 'airblade/vim-gitgutter'
 
+" formatPlugin 
+" Plug 'google/vim-maktaba'
+" Plug 'google/vim-codefmt'
+
 " ui
 Plug 'morhetz/gruvbox'
 Plug 'ajmwagar/vim-deus'
+Plug 'joshdick/onedark.vim'
+Plug 'junegunn/goyo.vim'
+
+" Plug 'arcticicestudio/nord-vim'
+Plug 'mg979/vim-xtabline'
 
 " Plug 'vim-airline/vim-airline'
 Plug 'liuchengxu/eleline.vim'
 
 " util
 Plug 'tpope/vim-surround'
+Plug 'gcmt/wildfire.vim'
 Plug 'jiangmiao/auto-pairs'
 " Plug 'preservim/nerdcommenter'
 Plug 'tpope/vim-commentary'
 
+" javascript
+Plug 'yuezk/vim-js', { 'for': ['javascript', 'html', 'css', 'less'] }
 
+" go
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()
 
 " color
@@ -192,12 +197,47 @@ nnoremap gp :GitGutterPreviewHunk<CR>
 nnoremap g- :GitGutterPrevHunk<CR>
 nnoremap g= :GitGutterNextHunk<CR>
 
+" === leaderf
+let g:Lf_PreviewInPopup = 1
+let g:Lf_PreviewCode = 1
+let g:Lf_ShowDevIcons = 1
+
 " === fzf
 noremap <silent> <C-p> :Files<CR>
 noremap <silent> <C-h> :History<CR>
+noremap <silent> <C-f> :Rg<CR>
+noremap <silent> ' :Buffers<CR>
+
+" === rooter
+let g:rooter_patterns = ['.git']
+
+" === format
+" augroup autoformat_settings
+"   " autocmd FileType bzl AutoFormatBuffer buildifier
+"   " autocmd FileType c,cpp,proto,javascript,arduino AutoFormatBuffer clang-format
+"   " autocmd FileType dart AutoFormatBuffer dartfmt
+"   " autocmd FileType go AutoFormatBuffer gofmt
+"   " autocmd FileType gn AutoFormatBuffer gn
+"   " autocmd FileType html,css,sass,scss,less,json AutoFormatBuffer js-beautify
+"   autocmd FileType java AutoFormatBuffer google-java-format
+"   " autocmd FileType python AutoFormatBuffer yapf
+"   " autocmd FileType rust AutoFormatBuffer rustfmt
+"   " autocmd FileType vue AutoFormatBuffer prettier
+" augroup END
+
+" vim-go
+let g:go_doc_keywordprg_enabled = 0
+let g:go_def_mapping_enabled = 0
+let g:go_textobj_enabled = 0
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_extra_types = 1
 
 " === coc
-let g:coc_global_extensions = ['coc-vimlsp', 'coc-json', 'coc-explorer', 'coc-snippets', 'coc-clangd']
+let g:coc_global_extensions = ['coc-vimlsp', 'coc-json', 'coc-explorer', 'coc-snippets', 'coc-metals', 'coc-tsserver', 'coc-prettier', 'coc-go', 'coc-java']
 
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
@@ -210,8 +250,8 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-inoremap inoremap<silent><expr> <c-o> coc#refresh()
-inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap<silent><expr> <C-o> coc#refresh()
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 " diagnostics navigation
 nmap <silent> <LEADER>- <Plug>(coc-diagnostic-prev)
@@ -224,6 +264,7 @@ nmap <silent> go <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
 " preview
+nnoremap <silent> <LEADER>v :call <SID>show_documentation()<CR>
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
@@ -231,6 +272,5 @@ function! s:show_documentation()
     call CocActionAsync('doHover')
   endif
 endfunction
-nnoremap <silent> <LEADER>v :call <SID>show_documentation()<CR>
 
-nmap ff :CocCommand explorer<CR>
+nmap tt :CocCommand explorer<CR>

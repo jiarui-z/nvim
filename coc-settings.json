@@ -1,13 +1,51 @@
 {
-  "coc.preferences.extensionUpdateCheck": "weekly",
+  "coc.preferences.extensionUpdateCheck": "daily",
   "list.previousKeymap": "<C-j>",
   "list.nextKeymap": "<C-l>",
+  "coc.preferences.floatActions": true,
+  "coc.preferences.formatOnSaveFiletypes": ["json", "javascript"],
+  "codeLens.enable": true,
   "diagnostic.refreshOnInsertMode": false,
   "explorer.icon.enableNerdfont": true,
   "explorer.file.showHiddenFiles": true,
   "explorer.width": 30,
-  "explorer.quitOnOpen": true,
-  "coc.preferences.formatOnSaveFiletypes": [
-    "json"
-  ]
+  "explorer.git.showIgnored": true,
+  "explorer.keyMappingMode": "none",
+  "explorer.keyMappings.global": {
+    "<tab>": "actionMenu",
+    "?": "help",
+    "q": "quit",
+    "i": "nodePrev",
+    "k": "nodeNext",
+    "l": ["wait", "expandable?", "expand", "open"],
+    "gl": ["wait", "expand:recursive"],
+    "gj": ["wait", "collapse:recursive"],
+    "o": ["wait", "expanded?", "collapse", "expand"],
+
+    "h": "addFile",
+    "M": "addDirectory",
+    "cw": "rename",
+    "yp": "copyFilepath",
+    "yn": "copyFilename",
+    "yy": "copyFile",
+    "dd": "cutFile",
+    "dD": "deleteForever",
+    "p": "pasteFile",
+
+    "f": "search",
+    "F": "searchRecursive",
+
+    "R": "refresh",
+    "zh": "toggleHidden",
+
+    "<<": "gitStage",
+    ">>": "gitUnstage",
+
+    "<2-LeftMouse>": [
+      "expandable?",
+      ["expanded?", "collapse", "expand"],
+      "open"
+    ]
+  },
+  "clangd.path": "/Users/zaratite/.config/coc/extensions/coc-clangd-data/install/11.0.0/clangd_11.0.0/bin/clangd"
 }
