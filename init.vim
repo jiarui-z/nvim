@@ -13,10 +13,10 @@ let &t_ut=''
 set autochdir
 set hidden
 set number
-set relativenumber
+" set relativenumber
 set cursorline
 set linebreak
-set noexpandtab
+set expandtab
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
@@ -65,7 +65,7 @@ set wrap
 set tw=0
 set foldmethod=indent
 set foldlevel=99
-autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+autocmd BufEnter * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " search
 set hlsearch
@@ -150,28 +150,31 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " git
 Plug 'airblade/vim-gitgutter'
 
-" formatPlugin 
+" formatPlugin
 " Plug 'google/vim-maktaba'
 " Plug 'google/vim-codefmt'
 
 " ui
+Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'nvim-treesitter/playground'
+
 Plug 'morhetz/gruvbox'
 Plug 'ajmwagar/vim-deus'
 Plug 'joshdick/onedark.vim'
 Plug 'junegunn/goyo.vim'
 
-" Plug 'arcticicestudio/nord-vim'
-Plug 'mg979/vim-xtabline'
+" Plug 'mg979/vim-xtabline'
 
 " Plug 'vim-airline/vim-airline'
-Plug 'liuchengxu/eleline.vim'
+" Plug 'liuchengxu/eleline.vim'
+Plug 'itchyny/lightline.vim'
 
 " util
+" Plug 'honza/vim-snippets'
 Plug 'tpope/vim-surround'
 Plug 'gcmt/wildfire.vim'
 Plug 'jiangmiao/auto-pairs'
-" Plug 'preservim/nerdcommenter'
-Plug 'tpope/vim-commentary'
+Plug 'tomtom/tcomment_vim'
 
 " javascript
 Plug 'yuezk/vim-js', { 'for': ['javascript', 'html', 'css', 'less'] }
@@ -186,6 +189,9 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 color deus
 
 " eleline
+let g:lightline = {
+      \ 'colorscheme': 'onedark',
+      \ }
 
 " === illuminate
 let g:Illuminate_delay = 600
@@ -206,10 +212,14 @@ let g:Lf_ShowDevIcons = 1
 noremap <silent> <C-p> :Files<CR>
 noremap <silent> <C-h> :History<CR>
 noremap <silent> <C-f> :Rg<CR>
-noremap <silent> ' :Buffers<CR>
+" noremap <silent> ' :Buffers<CR>
 
 " === rooter
 let g:rooter_patterns = ['.git']
+
+" === tcomment_vim
+let g:tcomment_opleader1 = '<LEADER>c'
+let g:tcomment_textobject_inlinecomment = 'hc'
 
 " === format
 " augroup autoformat_settings
@@ -236,6 +246,16 @@ let g:go_highlight_function_calls = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_extra_types = 1
 
+" treesitter
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = {"java", "c", "cpp", "python"}, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  highlight = {
+    enable = true,              -- false will disable the whole extension
+  },
+}
+EOF
+
 " === coc
 let g:coc_global_extensions = ['coc-vimlsp', 'coc-json', 'coc-explorer', 'coc-snippets', 'coc-metals', 'coc-tsserver', 'coc-prettier', 'coc-go', 'coc-java']
 
@@ -250,7 +270,7 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-inoremap<silent><expr> <C-o> coc#refresh()
+inoremap<silent><expr> <C-l> coc#refresh()
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 " diagnostics navigation
@@ -260,7 +280,7 @@ nmap <silent> <LEADER>= <Plug>(coc-diagnostic-next)
 " code uavigation.
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> go <Plug>(coc-implementation)
+nmap <silent> gh <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
 " preview
@@ -273,4 +293,7 @@ function! s:show_documentation()
   endif
 endfunction
 
+" explorer
 nmap tt :CocCommand explorer<CR>
+
+" completion icons https://github.com/neoclide/coc.nvim/pull/603
