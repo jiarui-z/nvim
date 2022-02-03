@@ -56,16 +56,16 @@ noremap tml :+tabmove<CR>
 " === windows
 set splitright
 set nosplitbelow
-map sl :vsplit<CR>
-map sk :split<CR>
-map <leader>k <C-w>k
-map <leader>j <C-w>j
-map <leader>h <C-w>h
-map <leader>l <C-w>l
-map <up> :res +5<CR>
-map <down> :res -5<CR>
-map <left> :vertical resize-5<CR>
-map <right> :vertical resize+5<CR>
+noremap ss :vsplit<CR>
+noremap sv :split<CR>
+noremap sk <C-w>k
+noremap sj <C-w>j
+noremap sh <C-w>h
+noremap sl <C-w>l
+noremap <up> :res +5<CR>
+noremap <down> :res -5<CR>
+noremap <left> :vertical resize-5<CR>
+noremap <right> :vertical resize+5<CR>
 
 noremap <C-d> :bw<CR>
 
