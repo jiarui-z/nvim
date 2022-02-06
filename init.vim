@@ -36,7 +36,7 @@ noremap <leader><CR> :nohlsearch<CR>
 " === remap cursor
 noremap s <nop>
 noremap gh ^
-noremap gl $
+noremap gl g_
 noremap K 5k
 noremap J 5j
 noremap zh zH
@@ -90,6 +90,9 @@ Plug 'jiangmiao/auto-pairs'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+
+" tabular
+" splitjoin
 call plug#end()
 
 colo nord
@@ -108,10 +111,15 @@ nnoremap gu :GitGutterUndoHunk<CR>
 let g:tcomment_opleader1 = '<leader>c'
 
 " ==== vim-sneak
-nmap f <Plug>Sneak_s
-nmap F <Plug>Sneak_S
+let g:sneak#label = 1
 let g:sneak#use_ic_scs = 1
 let g:sneak#s_next = 1
+map x <Plug>Sneak_s
+map X <Plug>Sneak_S
+map f <Plug>Sneak_f
+map F <Plug>Sneak_F
+map t <Plug>Sneak_t
+map T <Plug>Sneak_T
 
 " === fzf
 noremap <silent> <C-p> :Files<CR>
