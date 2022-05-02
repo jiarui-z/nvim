@@ -1,14 +1,20 @@
 " === setup
+set encoding=utf-8
+set nocompatible
 set mouse=a
 set clipboard+=unnamedplus
 let mapleader=" "
 set hidden
 set autochdir
+set wildmenu
+set ttm=50
+set shortmess+=c " try c-n
 
 " === ui
-set number
 set termguicolors
+set number
 set relativenumber
+set ruler
 set cursorline
 set laststatus=2
 set wrap
@@ -21,10 +27,13 @@ set expandtab
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
+set autoindent
 set list lcs=tab:\|\ ,trail:▫
 set scrolloff=5
-set shortmess+=c " try c-n
 set signcolumn=yes
+let &t_SI = "\e[6 q"
+let &t_SR = "\e[4 q"
+let &t_EI = "\e[2 q"
 
 " === search
 set hlsearch
@@ -33,18 +42,15 @@ set ignorecase
 set smartcase
 noremap <leader><CR> :nohlsearch<CR>
 
-" === remap cursor
-noremap s <nop>
+" === motion and operator
+noremap Y y$
+noremap U J
 noremap gh ^
 noremap gl g_
 noremap K 5k
 noremap J 5j
 noremap zh zH
 noremap zl zL
-
-noremap S :w<CR>
-noremap Q :q<CR>
-noremap <leader>rc :e $MYVIMRC<CR>
 
 " === tab management
 noremap tt :tabe<CR>
@@ -56,6 +62,7 @@ noremap tml :+tabmove<CR>
 " === windows
 set splitright
 set nosplitbelow
+noremap s <nop>
 noremap ss :vsplit<CR>
 noremap sv :split<CR>
 noremap sk <C-w>k
@@ -67,7 +74,21 @@ noremap <down> :res -5<CR>
 noremap <left> :vertical resize-5<CR>
 noremap <right> :vertical resize+5<CR>
 
+" === command mode
+cnoremap <C-p> <Up>
+cnoremap <C-n> <Down>
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
+cnoremap <C-b> <Left>
+cnoremap <C-f> <Right>
+cnoremap <M-b> <S-Left>
+cnoremap <M-w> <S-Right>
+
+" === others
 noremap <C-d> :bw<CR>
+noremap S :w<CR>
+noremap Q :q<CR>
+noremap <leader>rc :e $MYVIMRC<CR>
 
 " disable continuation of comments
 au BufEnter * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
@@ -99,6 +120,12 @@ colo nord
 let g:lightline = {
       \ 'colorscheme': 'nord',
       \ }
+
+" === auto-pairs
+let g:AutoPairsShortcutToggle = ''
+let g:AutoPairsShortcutFastWrap = ''
+let g:AutoPairsShortcutJump = ''
+let g:AutoPairsShortcutBackInsert = ''
 
 " === gitgutter
 let g:gitgutter_map_keys = 0
